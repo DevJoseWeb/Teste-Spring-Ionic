@@ -1,5 +1,7 @@
 # Teste-Spring-Ionic
 
+**Curso do Nélio Alves: https://www.udemy.com/spring-boot-ionic/**
+
 **Sobre:**
 - Sistema de pedidos com CRUD.
 
@@ -37,7 +39,5 @@
 - Play Store
 
 ## IDEs
-- [Spring Tool Suite]()
+- [Spring Tool Suite](https://spring.io/tools)
 - [Visual Studio Code]()
-
-**Curso do Nélio Alves: https://www.udemy.com/spring-boot-ionic/**
