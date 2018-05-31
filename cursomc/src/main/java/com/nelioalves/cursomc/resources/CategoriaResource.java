@@ -24,6 +24,10 @@ public class CategoriaResource {
 	// @PathVariable, p saber q id da url tem q ir p parametro do metodo
 	// retorno, ja encapsula com varias informacoes de resposta http p um serviço rest. <?> pode encontrar ou n
 	public ResponseEntity<?> find(@PathVariable Integer id) {
+		//n é bom um metodo no controlador rest ser grande com try e catch
+		/*quando der erro no categoria service, classe objectnotfound é acionada, a classe 
+		 * resourceexception tbm é acionada, q recebe o request e a mensagem do error, preenche a 
+		 * classe standarderror com as informacoes e retorna em formato json*/
 		Categoria obj = service.buscar(id);
 		return ResponseEntity.ok().body(obj);
 	}
