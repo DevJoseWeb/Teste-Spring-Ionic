@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.nelioalves.cursomc.services.exceptions.DataIntegrityException;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
+
 //
 @ControllerAdvice
 public class ResourceExceptionHandler {
@@ -15,12 +17,21 @@ public class ResourceExceptionHandler {
 	// json q informa o codigo http, mensagem de erro e o instante do erro
 	// clase auxiliar q vai interceptar a excessao
 
-	//tratador de excessoes desse tipo de excessao(ObjectNot..)
+	// tratador de excessoes desse tipo de excessao(ObjectNot..)
 	@ExceptionHandler(ObjectNotFoundException.class)
 	// metodo recebe a excessao e as informacoes da requisicao
 	public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException e, HttpServletRequest request) {
 
-		StandardError error = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis());
+		StandardError error = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(),
+				System.currentTimeMillis());
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+	}
+
+	@ExceptionHandler(DataIntegrityException.class)
+	public ResponseEntity<StandardError> dataIntegrity(DataIntegrityException e, HttpServletRequest request) {
+
+		StandardError error = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(),
+				System.currentTimeMillis());
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}
 }
