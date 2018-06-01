@@ -1,5 +1,6 @@
 package com.nelioalves.cursomc.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,5 +44,11 @@ public class CategoriaService {
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possivel excluir uma categoria que possui produtos");
 		}
+	}
+
+	public List<Categoria> findAll() {
+		Optional<List<Categoria>> list = Optional.ofNullable(repo.findAll());
+		return list
+				.orElseThrow(() -> new ObjectNotFoundException("Objetos não encontrados!" + Categoria.class.getName()));
 	}
 }
