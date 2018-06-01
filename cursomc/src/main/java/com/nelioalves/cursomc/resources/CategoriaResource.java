@@ -27,12 +27,12 @@ public class CategoriaResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	// @PathVariable, p saber q id da url tem q ir p parametro do metodo
 	// retorno, ja encapsula com varias informacoes de resposta http p um serviço rest. <?> pode encontrar ou n
-	public ResponseEntity<?> find(@PathVariable Integer id) {
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 		//n é bom um metodo no controlador rest ser grande com try e catch
 		/*quando der erro no categoria service, classe objectnotfound é acionada, a classe 
 		 * resourceexception tbm é acionada, q recebe o request e a mensagem do error, preenche a 
 		 * classe standarderror com as informacoes e retorna em formato json*/
-		Categoria obj = service.buscar(id);
+		Categoria obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
@@ -49,5 +49,12 @@ public class CategoriaResource {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		//gera o codigo 201
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id) {
+		obj.setId(id);
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build();
 	}
 }
