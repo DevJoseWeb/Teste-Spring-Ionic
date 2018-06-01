@@ -1,11 +1,15 @@
 package com.nelioalves.cursomc.resources;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.nelioalves.cursomc.domain.Categoria;
 import com.nelioalves.cursomc.services.CategoriaService;
@@ -30,5 +34,20 @@ public class CategoriaResource {
 		 * classe standarderror com as informacoes e retorna em formato json*/
 		Categoria obj = service.buscar(id);
 		return ResponseEntity.ok().body(obj);
+	}
+	
+	@RequestMapping(method=RequestMethod.POST)
+	//resposta http(responseentity) e n vai ter corpo(void)
+	//p obj ser construido atraves dos dados json q enviar, coloca a anotacao, faz o json ser convertido p objeto
+	public ResponseEntity<Void> insert(@RequestBody Categoria obj) {
+		//quando insere, o banco de dados atribui um novo id ao obj
+		obj = service.insert(obj);
+		//pega a id e fornece como argumento p a uri
+		/* envia a nova uri como resposta a requisicao q cria com sucesso uma nova categoria
+		 * localhost:8080/categorias/3
+		 * */
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		//gera o codigo 201
+		return ResponseEntity.created(uri).build();
 	}
 }
