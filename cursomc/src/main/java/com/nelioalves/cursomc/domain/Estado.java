@@ -10,7 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Estado implements Serializable {
@@ -22,7 +22,7 @@ public class Estado implements Serializable {
 	private Integer id;
 	private String nome;
 
-	@JsonBackReference
+	@JsonIgnore
 	//como ta fazendo o mapeamento reverso, tem q colocar o atributo q mapeou na classe cidade
 	@OneToMany(mappedBy="estado")
 	private List<Cidade> cidades = new ArrayList<>();
