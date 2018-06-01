@@ -12,7 +12,6 @@ import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
 @Service
 public class ClienteService {
 
-	// a dependencia é automaticamente instanciada pelo spring atraves da injecao de dependencias ou inversao de controle
 	@Autowired
 	private ClienteRepository repo;
 
