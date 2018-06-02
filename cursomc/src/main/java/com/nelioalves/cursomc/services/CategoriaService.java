@@ -5,6 +5,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.nelioalves.cursomc.domain.Categoria;
@@ -50,5 +53,13 @@ public class CategoriaService {
 		Optional<List<Categoria>> list = Optional.ofNullable(repo.findAll());
 		return list
 				.orElseThrow(() -> new ObjectNotFoundException("Objetos não encontrados!" + Categoria.class.getName()));
+	}
+	
+	//pagina q quer, linhas po pagina, ordenado po q atributo, ascendente ou descendente
+	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+//		prepara as informacoes, p q faca a consulta e retorne a pagina de dados
+//		PageRequest pr = PageRequest.of()page, linesPerPage, Direction.valueOf(direction), orderBy;
+		PageRequest pageRequest = new PageRequest(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		return repo.findAll(pageRequest);
 	}
 }
