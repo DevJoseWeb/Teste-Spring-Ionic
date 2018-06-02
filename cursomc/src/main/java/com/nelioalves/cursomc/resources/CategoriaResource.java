@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +51,9 @@ public class CategoriaResource {
 	// resposta http(responseentity) e n vai ter corpo(void)
 	// p obj ser construido atraves dos dados json q enviar, coloca a anotacao, faz
 	// o json ser convertido p objeto
-	public ResponseEntity<Void> insert(@RequestBody Categoria obj) {
+	// p ser validado antes de passar pelo metodo @ valid
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto) {
+		Categoria obj = service.fromDTO(objDto);
 		// quando insere, o banco de dados atribui um novo id ao obj
 		obj = service.insert(obj);
 		// pega a id e fornece como argumento p a uri
@@ -63,7 +67,8 @@ public class CategoriaResource {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id) {
+	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id) {
+		Categoria obj = service.fromDTO(objDto);
 		obj.setId(id);
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
@@ -82,6 +87,9 @@ public class CategoriaResource {
 		return ResponseEntity.ok().body(listDto);
 	}
 
+	/* requisicao passa pelo controlador rest, ja captura o objeto dto e 
+	 * valida. validacoes customizadas ficam na camada de servico. */
+	
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
 	// parametro opcional. http://localhost:8080/categorias/page?linesPerPage=3&page=0
 	// /page?linesPerPage=3&page=2&direction=DESC

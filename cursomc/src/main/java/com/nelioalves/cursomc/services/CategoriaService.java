@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.nelioalves.cursomc.domain.Categoria;
+import com.nelioalves.cursomc.dto.CategoriaDTO;
 import com.nelioalves.cursomc.repositories.CategoriaRepository;
 import com.nelioalves.cursomc.services.exceptions.DataIntegrityException;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
@@ -24,7 +25,7 @@ public class CategoriaService {
 	private CategoriaRepository repo;
 
 	public Categoria find(Integer id) {
-		Optional<Categoria> obj = Optional.ofNullable(repo.findOne(id));
+		Optional<Categoria> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
 	}
@@ -43,7 +44,7 @@ public class CategoriaService {
 	public void delete(Integer id) {
 		find(id);
 		try {
-			repo.delete(id);
+			repo.deleteById(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityException("Não é possivel excluir uma categoria que possui produtos");
 		}
@@ -58,8 +59,11 @@ public class CategoriaService {
 	//pagina q quer, linhas po pagina, ordenado po q atributo, ascendente ou descendente
 	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 //		prepara as informacoes, p q faca a consulta e retorne a pagina de dados
-//		PageRequest pr = PageRequest.of()page, linesPerPage, Direction.valueOf(direction), orderBy;
-		PageRequest pageRequest = new PageRequest(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		return repo.findAll(pageRequest);
+	}
+	
+	public Categoria fromDTO(CategoriaDTO objDto) {
+		return new Categoria(objDto.getId(), objDto.getNome());
 	}
 }
