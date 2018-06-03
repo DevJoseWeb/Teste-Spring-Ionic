@@ -51,6 +51,8 @@ public class ClienteResource {
 		return ResponseEntity.noContent().build();
 	}
 
+	/* n pode excluir cliente q possui pedidos. 
+	 * do contrario exclui cliente e endereco*/
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Cliente> delete(@PathVariable Integer id) {
 		service.delete(id);
