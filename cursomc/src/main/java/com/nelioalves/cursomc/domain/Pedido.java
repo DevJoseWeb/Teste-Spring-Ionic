@@ -134,4 +134,10 @@ public class Pedido implements Serializable {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Pedido [id=" + id + ", instante=" + instante + ", pagamento=" + pagamento + ", cliente=" + cliente
+				+ ", enderecoDeEntrega=" + enderecoDeEntrega + ", itens=" + itens + "]";
+	}
 }

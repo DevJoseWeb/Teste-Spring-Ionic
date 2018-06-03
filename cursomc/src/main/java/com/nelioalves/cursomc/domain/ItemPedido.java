@@ -94,4 +94,10 @@ public class ItemPedido implements Serializable {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ItemPedido [id=" + id + ", desconto=" + desconto + ", quantidade=" + quantidade + ", preco=" + preco
+				+ "]";
+	}
 }
