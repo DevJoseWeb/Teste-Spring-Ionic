@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,6 +32,11 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
+	
+	/*se so usar a anotacao, dificulta no tratamento da excessao. pois a excessao 
+	do banco n traz muitas informacoes. vai ser tratado n so como integridade do 
+	banco, mas como validacao dos dados*/
+	@Column(unique = true)
 	private String email;
 	private String cpfOuCnpj;
 	private Integer tipo;
