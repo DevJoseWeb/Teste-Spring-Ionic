@@ -25,18 +25,19 @@ public class Pedido implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
-	@JsonFormat(pattern="dd/MM/yyyy HH:mm")
+
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private Date instante;
 
-//	@JsonManagedReference
+	// @JsonManagedReference
 	// inclui o cascade, senao da erro de entidade transiente quando vai salvar o
 	// pedido e o pagamento dele
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")
 	private Pagamento pagamento;
 
-	//como sera feito um endpoint p o pedido e tem q mostrar o cliente, entao vai permitir q seja serializado o cliente do pedido e n o contrario
-//	@JsonManagedReference
+	// como sera feito um endpoint p o pedido e tem q mostrar o cliente, entao vai
+	// permitir q seja serializado o cliente do pedido e n o contrario
+	// @JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
@@ -45,9 +46,9 @@ public class Pedido implements Serializable {
 	@JoinColumn(name = "endereco_de_entrega_id")
 	private Endereco enderecoDeEntrega;
 
-	//se n tiver nd escrito 'json..', vai ser serializada
-	//objeto id q dentro esta o pedido
-	@OneToMany(mappedBy="id.pedido")
+	// se n tiver nd escrito 'json..', vai ser serializada
+	// objeto id q dentro esta o pedido
+	@OneToMany(mappedBy = "id.pedido")
 	private Set<ItemPedido> itens = new HashSet<>();
 
 	public Pedido() {
@@ -60,6 +61,14 @@ public class Pedido implements Serializable {
 		this.instante = instante;
 		this.cliente = cliente;
 		this.enderecoDeEntrega = enderecoDeEntrega;
+	}
+
+	public double getValorTotal() {
+		double soma = 0.0;
+		for (ItemPedido x : itens) {
+			soma += x.getSubTotal();
+		}
+		return soma;
 	}
 
 	public Integer getId() {

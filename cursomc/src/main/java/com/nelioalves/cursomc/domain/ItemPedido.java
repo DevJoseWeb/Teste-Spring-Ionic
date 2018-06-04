@@ -12,16 +12,16 @@ public class ItemPedido implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	//n serializa
+	// n serializa
 	@JsonIgnore
-	//id embutido em um tipo auxiliar
+	// id embutido em um tipo auxiliar
 	@EmbeddedId
 	private ItemPedidoPK id = new ItemPedidoPK();
 
 	private Double desconto;
 	private Integer quantidade;
 	private Double preco;
-	
+
 	public ItemPedido() {
 		super();
 	}
@@ -35,13 +35,18 @@ public class ItemPedido implements Serializable {
 		this.preco = preco;
 	}
 
-	//ira fazer a referencia ciclica
+	// o valor seja reconhecido pelo json e serializado
+	public double getSubTotal() {
+		return (preco - desconto) * quantidade;
+	}
+
+	// ira fazer a referencia ciclica
 	@JsonIgnore
 	public Pedido getPedido() {
 		return id.getPedido();
 	}
 
-	//quer q apareca o nome do produto do item de pedido
+	// quer q apareca o nome do produto do item de pedido
 	public Produto getProduto() {
 		return id.getProduto();
 	}
