@@ -11,10 +11,19 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.nelioalves.cursomc.domain.enums.EstadoPagamento;
+
+/* pacote jackson usado p serializar e deserializar objetos com json*/
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
+/* instanciacao de subclasses atraves de dados json, pois uma classe abstrata 
+ * so pode ser instanciada atraves de sub classes, entao p q possa envia um 
+ * json com dados de pagamento, tem q fazer uma preparacao p que possa receber
+ * esse dado*/
+// classe pagamento vai ter um campo adicional chamado '@type'
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 public abstract class Pagamento implements Serializable {
 
 	private static final long serialVersionUID = 1L;

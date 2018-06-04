@@ -46,11 +46,22 @@ public class ItemPedido implements Serializable {
 		return id.getPedido();
 	}
 
+	/*itempedido so consegue recuperar quem é o pedido e o produto
+	p q possa instancia um itempedido e associar um pedido e produto
+	ao itempedido, tem q implementar o set*/
+	public void setPedido(Pedido pedido) {
+		id.setPedido(pedido);
+	}
+	
 	// quer q apareca o nome do produto do item de pedido
 	public Produto getProduto() {
 		return id.getProduto();
 	}
 
+	public void setProduto(Produto produto) {
+		id.setProduto(produto);
+	}
+	
 	public Double getDesconto() {
 		return desconto;
 	}
