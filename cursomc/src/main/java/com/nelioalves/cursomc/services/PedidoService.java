@@ -69,6 +69,5 @@ public class PedidoService {
 		itemPedidoRepository.saveAll(obj.getItens());
 		emailService.sendOrderConfirmationEmail(obj);
 		return obj;
-		//MockMailService com Logger. Padrões Strategy e Template Method
 	}
 }
