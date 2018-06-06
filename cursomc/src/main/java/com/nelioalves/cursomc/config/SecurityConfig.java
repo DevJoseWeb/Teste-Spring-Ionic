@@ -7,14 +7,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.nelioalves.cursomc.security.JWTAuthenticationFilter;
+import com.nelioalves.cursomc.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
@@ -23,6 +28,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private Environment env;
 	
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
+	@Autowired
+	private JWTUtil jwtUtil;
+	
 	private static final String[] PUBLIC_MATCHES = {
 			"/h2-console/**", // tudo q vier depois de h2-console, sera liberado
 	};
@@ -30,7 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	//permite a leitura dos dados e n a modificacao
 	private static final String[] PUBLIC_MATCHES_GET = {
 			"/produtos/**",
-			"/categorias/**"
+			"/categorias/**",
+			"/clientes/**"
 	};
 	
 	@Override
@@ -52,10 +64,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(PUBLIC_MATCHES).permitAll()
 			// o resto precisa de autenticacao
 			.anyRequest().authenticated();
+		
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		
 		//asegurar q o backend n vai criar uma sessao de usuario
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 	
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		//vai usar a instancia de userD.. p dizer quem vai ser capaz de buscar um usuario por email
+		//mecanismo de autenticacao ja esta configurado abaixo. quem é o service e o encoder
+		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+	}
 	
 	 /*caso queira q requisicoes de multiplas fontes sejam feitas no backend, tem 
 	 q liberar explicitamente, por padrao n é liberada; 
