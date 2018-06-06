@@ -32,19 +32,27 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
-	
-	/*se so usar a anotacao, dificulta no tratamento da excessao. pois a excessao 
-	do banco n traz muitas informacoes. vai ser tratado n so como integridade do 
-	banco, mas como validacao dos dados*/
+
+	/*
+	 * se so usar a anotacao, dificulta no tratamento da excessao. pois a excessao
+	 * do banco n traz muitas informacoes. vai ser tratado n so como integridade do
+	 * banco, mas como validacao dos dados
+	 */
 	@Column(unique = true)
 	private String email;
 	private String cpfOuCnpj;
 	private Integer tipo;
 
-//	@JsonManagedReference
-	 /*tipo de comportamento em cascata. se 
-	  * apagar o cliente, vai apagar os enderecos tbm*/
-	@OneToMany(mappedBy = "cliente", cascade=CascadeType.ALL)
+	// p n aparecer o bcrypt da senha, quando retornar um cliente
+	@JsonIgnore
+	private String senha;
+
+	// @JsonManagedReference
+	/*
+	 * tipo de comportamento em cascata. se apagar o cliente, vai apagar os
+	 * enderecos tbm
+	 */
+	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 
 	@ElementCollection
@@ -52,20 +60,29 @@ public class Cliente implements Serializable {
 	private Set<String> telefones = new HashSet<>();
 
 	@JsonIgnore
-	@OneToMany(mappedBy="cliente")
+	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
 
 	public Cliente() {
 		super();
 	}
 
-	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
+	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo, String senha) {
 		super();
+		this.senha = senha;
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.tipo = (tipo == null) ? null : tipo.getCod();
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public Integer getId() {
