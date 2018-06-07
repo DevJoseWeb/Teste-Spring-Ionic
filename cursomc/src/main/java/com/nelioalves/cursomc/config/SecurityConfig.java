@@ -19,7 +19,18 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.nelioalves.cursomc.security.JWTAuthenticationFilter;
+import com.nelioalves.cursomc.security.JWTAuthorizationFilter;
 import com.nelioalves.cursomc.security.JWTUtil;
+
+/* quando o programa roda, é executado as configuracoes, securityconfig, jacksonconfig, profiletestconfig...
+ * libera e bloqueia alguns endpoints, libera o profile de test, desabilita a protecao de ataque csrf e
+ * adiciona o filtro quando fizer a requisicao p login.
+ * - UserDatailsService: pesquisa o usuario pelo email e retorna
+ * - JWTUtil: gera o token usando a palavra secreta, o tempo de expiracao e o username informado
+ * - UserSS: ira receber os dados da pesquisa pelo email do usuario que esta autenticando
+ * - CredenciaisDTO: quando for autenticar, sera jogado os dados da requisicao nessa classe
+ * - JWTAuthenticationFilter: quando é feita a requisicao pro login, ele intercepta, verifica se 
+ * o usuario existe, se existir, ele pega o email do usuario e gera o token*/
 
 @Configuration
 @EnableWebSecurity
@@ -66,6 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.anyRequest().authenticated();
 		
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 		
 		//asegurar q o backend n vai criar uma sessao de usuario
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

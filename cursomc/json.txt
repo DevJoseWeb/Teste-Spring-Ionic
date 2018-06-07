@@ -31,3 +31,9 @@ clientes
 	"cep":"38466837",
 	"cidadeId":2
 }
+
+login
+{
+	"email":"sergiofelippe.deiro@gmail.com",
+	"senha":"123"
+}
