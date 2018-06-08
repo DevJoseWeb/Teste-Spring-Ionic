@@ -13,50 +13,52 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import com.nelioalves.cursomc.domain.Cliente;
 import com.nelioalves.cursomc.domain.Pedido;
 
 public abstract class AbstractEmailService implements EmailService {
 
 	@Value("${default.sender}")
 	private String sender;
-	
+
 	@Autowired
 	private TemplateEngine templateEngine;
 
 	@Autowired
 	private JavaMailSender javaMailSender;
-	
-	/*template method: consegue implementar um metodo, baseado em 
-	metodos abstratos, q depois vai ser implementado nas implementacoes 
-	da interface*/
-	//instanciar o simplemail atraves de um pedido
+
+	/*
+	 * template method: consegue implementar um metodo, baseado em metodos
+	 * abstratos, q depois vai ser implementado nas implementacoes da interface
+	 */
+	// instanciar o simplemail atraves de um pedido
 	@Override
 	public void sendOrderConfirmationEmail(Pedido obj) {
-		SimpleMailMessage sm = preparedSimpleMailMessageFromPedido(obj);
+		SimpleMailMessage sm = prepareSimpleMailMessageFromPedido(obj);
 		sendEmail(sm);
 	}
 
-	protected SimpleMailMessage preparedSimpleMailMessageFromPedido(Pedido obj) {
+	protected SimpleMailMessage prepareSimpleMailMessageFromPedido(Pedido obj) {
 		SimpleMailMessage sm = new SimpleMailMessage();
 		sm.setTo(obj.getCliente().getEmail());
 		sm.setFrom(sender);
 		sm.setSubject("Pedido confirmado! Código: " + obj.getId());
-		//garante que vai ser a data do servidor
+		// garante que vai ser a data do servidor
 		sm.setSentDate(new Date(System.currentTimeMillis()));
 		sm.setText(obj.toString());
 		return sm;
 	}
-	
+
 	public void sendOrderConfirmationHtmlEmail(Pedido obj) {
 		try {
-			MimeMessage mm = preparedMimeMessageFromPedido(obj);
+			MimeMessage mm = prepareMimeMessageFromPedido(obj);
 			sendHtmlEmail(mm);
 		} catch (MessagingException e) {
 			sendOrderConfirmationEmail(obj);
 		}
 	}
 
-	private MimeMessage preparedMimeMessageFromPedido(Pedido obj) throws MessagingException {
+	private MimeMessage prepareMimeMessageFromPedido(Pedido obj) throws MessagingException {
 		MimeMessage mm = javaMailSender.createMimeMessage();
 		MimeMessageHelper mmh = new MimeMessageHelper(mm, true);
 		mmh.setTo(obj.getCliente().getEmail());
@@ -68,10 +70,27 @@ public abstract class AbstractEmailService implements EmailService {
 	}
 
 	protected String htmlFromTemplatePedido(Pedido obj) {
-		//acessar o template. a partir dele, envia o pedido p template
+		// acessar o template. a partir dele, envia o pedido p template
 		Context context = new Context();
 		context.setVariable("pedido", obj);
-		//processa o template e retorna o html em forma de string
+		// processa o template e retorna o html em forma de string
 		return templateEngine.process("email/confirmacaoPedido", context);
 	}
+
+	@Override
+	public void sendNewPasswordEmail(Cliente cliente, String newPass) {
+		SimpleMailMessage sm = prepareNewPasswordEmail(cliente, newPass);
+		sendEmail(sm);
+	}
+
+	protected SimpleMailMessage prepareNewPasswordEmail(Cliente cliente, String newPass) {
+		SimpleMailMessage sm = new SimpleMailMessage();
+		sm.setTo(cliente.getEmail());
+		sm.setFrom(sender);
+		sm.setSubject("Solicitação de nova senha");
+		sm.setSentDate(new Date(System.currentTimeMillis()));
+		sm.setText("Nova senha: " + newPass);
+		return sm;
+	}
+
 }

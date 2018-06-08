@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private JWTUtil jwtUtil;
 	
 	private static final String[] PUBLIC_MATCHES = {
-			"/h2-console/**", // tudo q vier depois de h2-console, sera liberado
+			"/h2-console/**" // tudo q vier depois de h2-console, sera liberado
 	};
 	
 	//permite a leitura dos dados e n a modificacao
@@ -60,7 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	//um cliente tem autorizacao para se cadastrar
 	private static final String[] PUBLIC_MATCHES_POST = {
-			"/clientes/**"
+			"/clientes/**",
+			"/auth/forgot/**"
 	};
 	
 	@Override
