@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -34,6 +35,8 @@ import com.nelioalves.cursomc.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+//permite usar anotacoes de pre autorizacao nos endpoints
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Autowired
@@ -52,7 +55,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	//permite a leitura dos dados e n a modificacao
 	private static final String[] PUBLIC_MATCHES_GET = {
 			"/produtos/**",
-			"/categorias/**",
+			"/categorias/**"
+	};
+	
+	//um cliente tem autorizacao para se cadastrar
+	private static final String[] PUBLIC_MATCHES_POST = {
 			"/clientes/**"
 	};
 	
@@ -69,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.and().csrf().disable();
 		
 		http.authorizeRequests()
+			.antMatchers(HttpMethod.POST, PUBLIC_MATCHES_POST).permitAll()
 			//so permite o metodo get q tiver na lista
 			.antMatchers(HttpMethod.GET, PUBLIC_MATCHES_GET).permitAll()
 			//permite todos os caminhos q estao no vetor
