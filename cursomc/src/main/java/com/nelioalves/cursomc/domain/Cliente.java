@@ -72,6 +72,8 @@ public class Cliente implements Serializable {
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
 
+	private String imgUrl;
+	
 	//por padrao todo usuario é um cliente a n ser q informe q é admin
 	public Cliente() {
 		addPefil(Perfil.CLIENTE);
@@ -86,6 +88,14 @@ public class Cliente implements Serializable {
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.tipo = (tipo == null) ? null : tipo.getCod();
 		addPefil(Perfil.CLIENTE);
+	}
+
+	public String getImgUrl() {
+		return imgUrl;
+	}
+
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
 	}
 
 	public String getSenha() {

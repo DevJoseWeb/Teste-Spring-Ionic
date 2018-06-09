@@ -33,38 +33,38 @@ public class ClienteService {
 
 	@Autowired
 	private S3Service s3service;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder pe;
-	
+
 	@Autowired
 	private ClienteRepository repo;
-	
+
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 
 	// garante que vai inserir o cliente e o endereço na mesma transação do banco
 	@Transactional
 	public Cliente find(Integer id) {
-		
-		//o usuario so podera acessar o cliente se for ele mesmo, logado
+
+		// o usuario so podera acessar o cliente se for ele mesmo, logado
 		UserSS user = UserService.authenticated();
-		if(user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId()))
+		if (user == null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId()))
 			throw new AuthorizationException("Acesso negado");
-		
+
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
 	}
 
 	public Cliente update(Cliente obj) {
-		
+
 		Cliente newObj = find(obj.getId());
 		updateData(newObj, obj);
 		return repo.save(obj);
 	}
 
-	//n deixa o nome e email nulo
+	// n deixa o nome e email nulo
 	private void updateData(Cliente newObj, Cliente obj) {
 		newObj.setNome(obj.getNome());
 		newObj.setEmail(obj.getEmail());
@@ -122,9 +122,19 @@ public class ClienteService {
 
 		return cli;
 	}
-	
-	//vai repassar a chamado p s3 service
+
+	// vai repassar a chamado p s3 service
 	public URI uploadProfilePicture(MultipartFile multipartFile) {
-		return s3service.uploadFile(multipartFile);
+		Optional<UserSS> userOptional = Optional.ofNullable(UserService.authenticated());
+		userOptional.orElseThrow(() -> new AuthorizationException("Acesso negado"));
+		UserSS user = userOptional.get();
+		
+		URI uri = s3service.uploadFile(multipartFile);
+		
+		Optional<Cliente> cli = repo.findById(user.getId());
+		cli.get().setImgUrl(uri.toString());
+		repo.save(cli.get());
+		
+		return uri;
 	}
 }
