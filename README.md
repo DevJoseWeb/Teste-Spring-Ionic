@@ -1,5 +1,7 @@
 # Teste-Spring-Ionic
 
+> **Nota:** Este projeto entrara em pausa.
+
 **Curso do Nélio Alves: https://www.udemy.com/spring-boot-ionic/**
 
 **Sobre:**
