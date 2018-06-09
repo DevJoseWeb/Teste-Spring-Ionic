@@ -1,5 +1,6 @@
 package com.nelioalves.cursomc.resources;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nelioalves.cursomc.domain.Produto;
 import com.nelioalves.cursomc.dto.ProdutoDTO;
@@ -49,4 +51,10 @@ public class ProdutoResource {
 		
 		return ResponseEntity.ok().body(listDto);
 	}
+	
+//	@RequestMapping(value = "/picture", method = RequestMethod.POST)
+//	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name = "file") MultipartFile file) {
+//		URI uri = service.uploadProfilePicture(file);
+//		return ResponseEntity.created(uri).build();
+//	}
 }

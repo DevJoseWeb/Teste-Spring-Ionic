@@ -82,6 +82,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		 * - options é outro verbo http, ele verifica se é permitido acessar algo, se o controle de acesso estiver tudo bem, ele devolve o recurso, senao da erro de cors
 		 * - se for post e content-type n for padrao, ele vai p options, senao, ele ve se o cabecalho é customizado se for, vai p options, senao retorna pagina
 		 * - se for put ou delete ele vai fazer a verificacao adicional, pois eles sao metodos mais graves, pq ele altera o recurso*/
+		
+		//configura o cors no bucket
 	}
 
 	/*

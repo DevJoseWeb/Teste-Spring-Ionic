@@ -36,6 +36,9 @@ public class ClienteService {
 	@Value("${img.profile.size}")
 	private Integer size;
 	
+	@Value("${img.prefix.client.profile}")
+	private String prefix;
+	
 	@Autowired
 	private ImageService imgService;
 	
@@ -47,9 +50,6 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteRepository repo;
-	
-	@Value("${img.prefix.client.profile}")
-	private String prefix;
 	
 	@Autowired
 	private EnderecoRepository enderecoRepository;
@@ -103,6 +103,21 @@ public class ClienteService {
 				.orElseThrow(() -> new ObjectNotFoundException("Objetos não encontrados!" + Cliente.class.getName()));
 	}
 
+	public Cliente findByEmail(String email) {
+		Optional<UserSS> userOptional = Optional.ofNullable(UserService.authenticated());
+		userOptional.orElseThrow(() -> new AuthorizationException("Acesso negado"));
+		UserSS user = userOptional.get();
+		
+		if(!user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+		
+		Optional<Cliente> objOptional = Optional.ofNullable(repo.findByEmail(email));
+		objOptional.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado!" + Cliente.class.getName()));
+		
+		return objOptional.get();
+	}
+	
 	//
 	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);

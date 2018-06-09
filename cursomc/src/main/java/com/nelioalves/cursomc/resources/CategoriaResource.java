@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.nelioalves.cursomc.domain.Categoria;
@@ -91,11 +92,14 @@ public class CategoriaResource {
 		return ResponseEntity.ok().body(listDto);
 	}
 
-	/* requisicao passa pelo controlador rest, ja captura o objeto dto e 
-	 * valida. validacoes customizadas ficam na camada de servico. */
-	
+	/*
+	 * requisicao passa pelo controlador rest, ja captura o objeto dto e valida.
+	 * validacoes customizadas ficam na camada de servico.
+	 */
+
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
-	// parametro opcional. http://localhost:8080/categorias/page?linesPerPage=3&page=0
+	// parametro opcional.
+	// http://localhost:8080/categorias/page?linesPerPage=3&page=0
 	// /page?linesPerPage=3&page=2&direction=DESC
 	public ResponseEntity<Page<CategoriaDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
@@ -105,4 +109,10 @@ public class CategoriaResource {
 		Page<CategoriaDTO> listDto = list.map(obj -> new CategoriaDTO(obj));
 		return ResponseEntity.ok().body(listDto);
 	}
+
+//	@RequestMapping(value = "/picture", method = RequestMethod.POST)
+//	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name = "file") MultipartFile file) {
+//		URI uri = service.uploadProfilePicture(file);
+//		return ResponseEntity.created(uri).build();
+//	}
 }

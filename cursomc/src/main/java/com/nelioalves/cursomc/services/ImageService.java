@@ -18,7 +18,6 @@ import com.nelioalves.cursomc.services.exceptions.FileException;
 @Service
 public class ImageService {
 
-	// img.prefix.client.profile
 	public BufferedImage getJpgImageFromFile(MultipartFile uploadedFile) {
 		// pega a extensao do arquivo
 		String ext = FilenameUtils.getExtension(uploadedFile.getOriginalFilename());

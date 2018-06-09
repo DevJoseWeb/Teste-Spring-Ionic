@@ -1,18 +1,24 @@
 package com.nelioalves.cursomc.services;
 
+import java.awt.image.BufferedImage;
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.nelioalves.cursomc.domain.Categoria;
 import com.nelioalves.cursomc.dto.CategoriaDTO;
 import com.nelioalves.cursomc.repositories.CategoriaRepository;
+import com.nelioalves.cursomc.security.UserSS;
+import com.nelioalves.cursomc.services.exceptions.AuthorizationException;
 import com.nelioalves.cursomc.services.exceptions.DataIntegrityException;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -23,6 +29,18 @@ public class CategoriaService {
 	// dependencias ou inversao de controle
 	@Autowired
 	private CategoriaRepository repo;
+	
+	@Value("${img.profile.size}")
+	private Integer size;
+	
+	@Value("${img.prefix.category}")
+	private String prefix;
+	
+	@Autowired
+	private ImageService imgService;
+	
+	@Autowired
+	private S3Service s3service;
 
 	public Categoria find(Integer id) {
 		Optional<Categoria> obj = repo.findById(id);
@@ -71,4 +89,18 @@ public class CategoriaService {
 	public Categoria fromDTO(CategoriaDTO objDto) {
 		return new Categoria(objDto.getId(), objDto.getNome());
 	}
+	
+//	public URI uploadProfilePicture(MultipartFile multipartFile) {
+//		Optional<UserSS> userOptional = Optional.ofNullable(UserService.authenticated());
+//		userOptional.orElseThrow(() -> new AuthorizationException("Acesso negado"));
+//		UserSS user = userOptional.get();
+//		
+//		BufferedImage jpgImg = imgService.getJpgImageFromFile(multipartFile);
+//		jpgImg = imgService.cropSquare(jpgImg);
+//		jpgImg = imgService.resize(jpgImg, size);
+//		
+//		String fileName = prefix + user.getId() + ".jpg";
+//		
+//		return s3service.uploadFile(imgService.getInputStream(jpgImg, "jpg"), fileName, "image");
+//	}
 }
