@@ -19,6 +19,6 @@ public class CursomcApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		s3service.uploadFile("C:\\temp\\fotos\\img1.jpg");
+//		s3service.uploadFile("C:\\temp\\fotos\\img1.jpg");
 	}
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.nelioalves.cursomc.domain.Cliente;
@@ -79,5 +80,18 @@ public class ClienteResource {
 		Page<Cliente> list = service.findPage(page, linesPerPage, orderBy, direction);
 		Page<ClienteDTO> listDto = list.map(obj -> new ClienteDTO(obj));
 		return ResponseEntity.ok().body(listDto);
+	}
+	
+	//como ta gerando um novo recurso, usa o metodo post
+	@RequestMapping(value="/picture", method = RequestMethod.POST)
+	//reconhece q chegou o parametro file da requisicao http
+	public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name="file") MultipartFile file) {
+		//vai fazer upload de uma imagem, vai ter como resposta a uri dessa imagem
+		URI uri = service.uploadProfilePicture(file);
+		//vai retornar a resposta http 201 q um recurso foi criado, e que a uri desse recurso vai ser essa q vai chegar o cabeçalho
+		return ResponseEntity.created(uri).build();
+		
+		//envia um json form-data e n o raw no body. tira o headers o content-type json p n confundir o servidor
+		//no body crie a chave file e selecione file e n text, no value escolhe o arquivo
 	}
 }

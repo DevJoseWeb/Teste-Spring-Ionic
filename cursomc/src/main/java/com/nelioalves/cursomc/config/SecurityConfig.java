@@ -60,7 +60,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	//um cliente tem autorizacao para se cadastrar
 	private static final String[] PUBLIC_MATCHES_POST = {
-			"/clientes/**",
+			"/clientes",
+			//vai liberar provisoriamente p n ter q ficar fazendo login
+			"/clientes/picture",
 			"/auth/forgot/**"
 	};
 	
