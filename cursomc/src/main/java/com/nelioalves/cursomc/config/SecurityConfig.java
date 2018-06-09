@@ -49,7 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private JWTUtil jwtUtil;
 	
 	private static final String[] PUBLIC_MATCHES = {
-			"/h2-console/**" // tudo q vier depois de h2-console, sera liberado
+			"/h2-console/**", // tudo q vier depois de h2-console, sera liberado
+			"/estados/**"
 	};
 	
 	//permite a leitura dos dados e n a modificacao

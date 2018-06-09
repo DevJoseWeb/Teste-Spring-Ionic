@@ -51,6 +51,8 @@ public class ClienteResource {
 		Cliente obj = service.findByEmail(email);
 		return ResponseEntity.ok().body(obj);
 	}
+//	/estados
+//	/estados/{estado_id}/cidades
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<Void> update(@Valid @RequestBody ClienteDTO objDto, @PathVariable Integer id) {

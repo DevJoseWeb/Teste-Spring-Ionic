@@ -1,4 +1,4 @@
-pedido
+﻿pedido
 {
 	"cliente" : {"id" : 1},
 	"enderecoDeEntrega" : {"id" : 1},
@@ -36,4 +36,24 @@ login
 {
 	"email":"sergiofelippe.deiro@gmail.com",
 	"senha":"123"
+}
+
+bucket
+{
+"Version": "2008-10-17",
+"Statement": [
+{
+"Sid": "AllowPublicRead",
+"Effect": "Allow",
+"Principal": {
+"AWS": "*"
+},
+"Action": [
+"s3:GetObject"
+],
+"Resource": [
+"arn:aws:s3:::curso-spring-ionic/*"
+]
+}
+]
 }
