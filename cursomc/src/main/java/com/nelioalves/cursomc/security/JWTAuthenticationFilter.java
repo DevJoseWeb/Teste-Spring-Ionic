@@ -71,6 +71,17 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String username = ((UserSS) auth.getPrincipal()).getUsername();
 		String token = jwtUtil.generateToken(username);
 		res.addHeader("Authorization", "Bearer " + token);
+		//naturalmente a aplicacao n consegue acessar, entao tem q deixar exposto.
+		//esta enviando um cabecalho personalizado q é o authorization, entao tem q dar uma instrucao explicita no backend p liberar a leitura do cabecalho
+		res.addHeader("access-control-expose-headers", "Authorization");
+		//acrescentando um cabecalho customizado, por padrao n é aceito pelo mecanismo de cors
+		/* quais recursos (metodo http, ou header) estarao disponiveis para requisicoes advindas de origens diferentes
+		 * a api/backend esta hospedado em um certo servidor, quando vem uma requisicao de outro endereco, o q vai disponibilizar o cr q esta fazendo a requisicao p mim. o mecanismo q define isso é o cors
+		 * - a requisicao de outra origem, ele é get?
+		 * - get e tem cabeçalho customizado, vai p options, senao ele retorna a pagina.
+		 * - options é outro verbo http, ele verifica se é permitido acessar algo, se o controle de acesso estiver tudo bem, ele devolve o recurso, senao da erro de cors
+		 * - se for post e content-type n for padrao, ele vai p options, senao, ele ve se o cabecalho é customizado se for, vai p options, senao retorna pagina
+		 * - se for put ou delete ele vai fazer a verificacao adicional, pois eles sao metodos mais graves, pq ele altera o recurso*/
 	}
 
 	/*
