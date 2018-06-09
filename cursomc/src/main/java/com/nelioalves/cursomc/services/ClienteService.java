@@ -33,6 +33,9 @@ import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
 @Service
 public class ClienteService {
 
+	@Value("${img.profile.size}")
+	private Integer size;
+	
 	@Autowired
 	private ImageService imgService;
 	
@@ -137,6 +140,9 @@ public class ClienteService {
 		UserSS user = userOptional.get();
 		
 		BufferedImage jpgImg = imgService.getJpgImageFromFile(multipartFile);
+		jpgImg = imgService.cropSquare(jpgImg);
+		jpgImg = imgService.resize(jpgImg, size);
+		
 		String fileName = prefix + user.getId() + ".jpg";
 		
 		return s3service.uploadFile(imgService.getInputStream(jpgImg, "jpg"), fileName, "image");
